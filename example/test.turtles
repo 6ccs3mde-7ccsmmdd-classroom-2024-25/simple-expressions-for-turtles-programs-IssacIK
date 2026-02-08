@@ -1,3 +1,1 @@
-var x = 3
-forward(10 + x * x)
-turn left by 12.5 degrees
+forward(1)

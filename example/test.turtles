@@ -1,0 +1,6 @@
+var x = 3
+forward(10 + x * x)
+2 times do
+  backward(1 + (0 * (9+1)))
+end
+turn left by 12.5 degrees

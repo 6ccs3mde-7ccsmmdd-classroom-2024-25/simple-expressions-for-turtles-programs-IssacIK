@@ -4,6 +4,7 @@ generate turtles "http://www.ac.uk/kcl/inf/mdd2/Turtles"
 
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 
+
 TurtleProgram:
     statements += Statement*
 ;
@@ -20,13 +21,13 @@ VariableDeclaration:
 ;
 
 LoopStatement:
-    count=IntExpression "times" "do"
+    count = IntExpression "times" "do"
         statements += Statement+
     "end"
 ;
 
 MoveStatement:
-    command=MoveCommand "(" steps=IntExpression ")"
+    command = MoveCommand "(" steps = IntExpression ")"
 ;
 
 enum MoveCommand:
@@ -34,7 +35,7 @@ enum MoveCommand:
 ;
 
 TurnStatement:
-    "turn" command=TurnCommand "by" degrees=REAL "degrees"
+    "turn" command = TurnCommand "by" degrees = REAL "degrees"
 ;
 
 enum TurnCommand:
@@ -42,44 +43,41 @@ enum TurnCommand:
 ;
 
 
-/* ========================= */
-/* EXPRESSIONS (REQUIRED)    */
-/* ========================= */
+/* ======================================================
+   EXPRESSIONS (THIS IS THE IMPORTANT PART)
+   ====================================================== */
 
-/** Keep this rule name (autograder expects it). */
 IntExpression:
     Addition
 ;
 
-/** Lowest precedence: + */
 Addition returns IntExpression:
-    Multiplication ({Addition.left=current} operator="+" right=Multiplication)*
+    Multiplication ({Addition.left=current} operator='+' right=Multiplication)*
 ;
 
-/** Higher precedence: * */
 Multiplication returns IntExpression:
-    Primary ({Multiplication.left=current} operator="*" right=Primary)*
+    Primary ({Multiplication.left=current} operator='*' right=Primary)*
 ;
 
-/** Atoms: literal, var ref, parentheses */
 Primary returns IntExpression:
     IntLiteral |
     IntVarExpression |
-    "(" Addition ")"
+    "(" IntExpression ")"
 ;
 
-/** Separate class with attribute 'val' */
-IntLiteral returns IntExpression:
-    val=INT
+IntLiteral:
+    val = INT
 ;
 
-/** Separate class with reference 'var' */
-IntVarExpression returns IntExpression:
-    var=[VariableDeclaration]
+IntVarExpression:
+    var = [VariableDeclaration]
 ;
 
 
-/* REAL support for turn degrees */
-REAL returns ecore::EFloat hidden():
+/* ======================================================
+   REAL NUMBER SUPPORT
+   ====================================================== */
+
+REAL returns ecore::EFloat:
     INT? "." INT
 ;
